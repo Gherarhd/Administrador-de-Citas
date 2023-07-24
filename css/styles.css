@@ -1,0 +1,115 @@
+html {
+  min-height: 100%;
+}
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+
+  background: hsla(148, 89%, 78%, 1);
+
+  background: linear-gradient(
+    90deg,
+    hsla(148, 89%, 78%, 1) 0%,
+    hsla(210, 81%, 22%, 1) 100%
+  );
+
+  background: -moz-linear-gradient(
+    90deg,
+    hsla(148, 89%, 78%, 1) 0%,
+    hsla(210, 81%, 22%, 1) 100%
+  );
+
+  background: -webkit-linear-gradient(
+    90deg,
+    hsla(148, 89%, 78%, 1) 0%,
+    hsla(210, 81%, 22%, 1) 100%
+  );
+
+  filter: progid: DXImageTransform.Microsoft.gradient( startColorstr="#95F9C3", endColorstr="#0B3866", GradientType=1 );
+  min-height: 100%;
+  padding-bottom: 0;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+.titulo {
+  font-weight: bold;
+  font-size: 2rem;
+  text-transform: uppercase;
+  color: white;
+  margin: 5px;
+}
+.container {
+  background-color: white;
+  -webkit-box-shadow: 2px 2px 6px 0px rgba(66, 68, 90, 1);
+  -moz-box-shadow: 2px 2px 6px 0px rgba(66, 68, 90, 1);
+  box-shadow: 2px 2px 6px 0px rgba(66, 68, 90, 1);
+  border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
+}
+header {
+  margin-top: 3rem;
+}
+header h1 {
+  color: white;
+}
+.lista-citas .cita {
+  border: 1px solid #666666;
+  padding: 2rem;
+  margin-bottom: 7px;
+  padding-bottom: 3rem;
+  -webkit-box-shadow: 2px 2px 6px 0px rgba(66, 68, 90, 1);
+  -moz-box-shadow: 2px 2px 6px 0px rgba(66, 68, 90, 1);
+  box-shadow: 2px 2px 6px 0px rgba(66, 68, 90, 1);
+  border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
+}
+.lista-citas .cita:last-of-type {
+  border-bottom: 0;
+}
+
+.lista-citas .cita p {
+  margin: 0;
+}
+.lista-citas .cita button {
+  margin-top: 1rem !important;
+}
+.lista-citas .cita span {
+  font-weight: bold;
+}
+textarea {
+  height: 200px !important;
+}
+
+svg {
+  width: 21px;
+}
+
+.footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+}
+
+.dog {
+  width: 120px;
+  height: 120px;
+  border-radius: 100%;
+  -webkit-border-radius: 100%;
+  -moz-border-radius: 100%;
+  -ms-border-radius: 100%;
+  -o-border-radius: 100%;
+}
+
+@media (max-width: 420px) {
+  .footer {
+    flex-direction: column;
+  }
+}
