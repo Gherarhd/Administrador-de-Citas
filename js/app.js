@@ -1,6 +1,9 @@
 "use strict";
 import { App } from "./Clases/App.js";
+import { LoadDB } from "./Datos/baseDatos.js";
 
-const app = new App();
+window.onload = () => {
+  const app = new App();
 
-
+  const datos = new LoadDB();
+};

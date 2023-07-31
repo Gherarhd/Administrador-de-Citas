@@ -1,5 +1,5 @@
 "use strict";
-import { editarCita, eliminarCita } from "../funciones.js";
+import { editarCita, eliminarCita, DB } from "../funciones.js";
 import { contenedorCitas, heading } from "../selectores.js";
 
 export class UI {
@@ -33,50 +33,63 @@ export class UI {
     }, 5000);
   }
 
-  imprimirCitas({ citas }) {
+  imprimirCitas() {
     //llama el método de limpiar html antes de hacer la iteración
     this.limpiarHTML();
 
     this.textoHeading(citas);
 
-    citas.forEach((cita) => {
-      const { mascota, propietario, telefono, fecha, hora, sintomas, id } =
-        cita;
+    //leer el contenido de la base de datos
+    const objectStore = DB.transaction("citas").objectStore("citas");
 
-      const divCita = document.createElement("div");
-      divCita.classList.add("cita", "p-3");
-      divCita.dataset.id = id;
+    const fnTextoHeading = this.textoHeading;
 
-      //Scripting de los elementos de la cita
-      const mascotaParrafo = document.createElement("h2");
-      mascotaParrafo.classList.add("card-title", "font-weight-bolder");
-      mascotaParrafo.textContent = mascota;
+    const total = objectStore.count();
+    total.onsuccess = function () {
+      fnTextoHeading(total.result);
+    };
 
-      const propietarioParrafo = document.createElement("p");
-      propietarioParrafo.innerHTML = `
+    objectStore.openCursor().onsuccess = function (e) {
+      const cursor = e.target.result;
+
+      if (cursor) {
+        const { mascota, propietario, telefono, fecha, hora, sintomas, id } =
+          cursor.value;
+
+        const divCita = document.createElement("div");
+        divCita.classList.add("cita", "p-3");
+        divCita.dataset.id = id;
+
+        //Scripting de los elementos de la cita
+        const mascotaParrafo = document.createElement("h2");
+        mascotaParrafo.classList.add("card-title", "font-weight-bolder");
+        mascotaParrafo.textContent = mascota;
+
+        const propietarioParrafo = document.createElement("p");
+        propietarioParrafo.innerHTML = `
       <span class='font-weight-bolder'>Propietario: </span> ${propietario}`;
 
-      const telefonoParrafo = document.createElement("p");
-      telefonoParrafo.innerHTML = `
+        const telefonoParrafo = document.createElement("p");
+        telefonoParrafo.innerHTML = `
       <span class='font-weight-bolder'>Teléfono: </span> ${telefono}`;
 
-      const fechaParrafo = document.createElement("p");
-      fechaParrafo.innerHTML = `
+        const fechaParrafo = document.createElement("p");
+        fechaParrafo.innerHTML = `
       <span class='font-weight-bolder'>Fecha: </span> ${fecha}`;
 
-      const horaParrafo = document.createElement("p");
-      horaParrafo.innerHTML = `
+        const horaParrafo = document.createElement("p");
+        horaParrafo.innerHTML = `
       <span class='font-weight-bolder'>Hora: </span> ${hora}`;
 
-      const sintomasParrafo = document.createElement("p");
-      sintomasParrafo.innerHTML = `
+        const sintomasParrafo = document.createElement("p");
+        sintomasParrafo.innerHTML = `
       <span class='font-weight-bolder'>Síntomas: </span> ${sintomas}`;
 
-      //boton para eliminar citas
+        //boton para eliminar citas
 
-      const btnElminar = document.createElement("button");
-      btnElminar.classList.add("btn", "btn-danger", "mr-2");
-      btnElminar.innerHTML = `Eliminar <svg
+        const btnElminar = document.createElement("button");
+        btnElminar.classList.add("btn", "btn-danger", "mr-2");
+        btnElminar.innerHTML = `Eliminar <svg
   fill="none"
   stroke="currentColor"
   stroke-width="1.5"
@@ -91,35 +104,40 @@ export class UI {
   ></path>
 </svg>`;
 
-      btnElminar.onclick = () => eliminarCita(id);
+        btnElminar.onclick = () => eliminarCita(id);
 
-      //añade boton para editar
+        //añade boton para editar
 
-      const btnEditar = document.createElement("button");
-      btnEditar.classList.add("btn", "btn-info", "mr-2");
-      btnEditar.innerHTML = `Editar <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        const btnEditar = document.createElement("button");
+        btnEditar.classList.add("btn", "btn-info", "mr-2");
+        btnEditar.innerHTML = `Editar <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
   <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"></path>
 </svg>`;
+        const cita = cursor.value;
+        btnEditar.onclick = () => editarCita(cita);
 
-      btnEditar.onclick = () => editarCita(cita);
+        //agregar los parrafos al divCitas
+        divCita.appendChild(mascotaParrafo);
+        divCita.appendChild(propietarioParrafo);
+        divCita.appendChild(telefonoParrafo);
+        divCita.appendChild(fechaParrafo);
+        divCita.appendChild(horaParrafo);
+        divCita.appendChild(sintomasParrafo);
+        divCita.appendChild(btnElminar);
+        divCita.appendChild(btnEditar);
 
-      //agregar los parrafos al divCitas
-      divCita.appendChild(mascotaParrafo);
-      divCita.appendChild(propietarioParrafo);
-      divCita.appendChild(telefonoParrafo);
-      divCita.appendChild(fechaParrafo);
-      divCita.appendChild(horaParrafo);
-      divCita.appendChild(sintomasParrafo);
-      divCita.appendChild(btnElminar);
-      divCita.appendChild(btnEditar);
+        //agregar el divCita al HTML.
+        contenedorCitas.appendChild(divCita);
 
-      //agregar el divCita al HTML.
-      contenedorCitas.appendChild(divCita);
-    });
+        //Ve al siguiente elemento
+
+        cursor.continue();
+      }
+    };
   }
 
-  textoHeading(citas) {
-    if (citas.length > 0) {
+  textoHeading(resultado) {
+    if (resultado > 0) {
       heading.textContent = "Administra tus Citas";
     } else {
       heading.textContent = "No hay citas, comienza creando una!";
